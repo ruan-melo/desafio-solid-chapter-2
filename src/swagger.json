@@ -1,0 +1,245 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title":  "Users Manager",
+        "version": "1.0.0",
+        "description": "This is an api to manage users",
+        "contact": {
+            "email": "ruantmelo@gmail.com"
+        }
+    },
+    "tags": [{
+        "name": "users",
+        "description": "Operations about users"
+    
+    }],
+    "paths": {
+        "/users": {
+            "post": {
+                "tags": ["users"],
+                "summary": "Create a new user",
+                "description": "Create a new user",
+                "operationId": "createUser",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Fulano"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "fulano@mail.com"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "User already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                
+            },
+            "get": {
+                "tags": ["users"],
+                "summary": "List all users",
+                "description": "List all users",
+                "operationId": "listUsers",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "header",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Usuário sem permissão ou inexistente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"#components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{user_id}": {
+            "parameters": [{
+                "name": "user_id",
+                "in": "path",
+                "description": "User ID",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "format": "uuid"
+                }
+            }],
+            "get": {
+                "tags": ["users"],
+                "summary": "Get user profile by ID",
+                "description": "Get user profile by ID",
+                "operationId": "getUser",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#components/schemas/User"
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Usuário inexistente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"#components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+        },
+        "/users/{user_id}/admin": {
+            "patch": {
+                "tags": ["users"],
+                "summary": "Set user as admin",
+                "description": "Set user as admin",
+                "operationId": "turnUserAdmin",
+                "parameters": [{
+                    "name": "user_id",
+                    "in": "path",
+                    "description": "User ID",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Usuário inexistente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"#components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }     
+    },
+    
+    "components": {
+        "schemas": {
+            "User": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "30d5b01a-1903-4cd7-80d8-e3c2c508f815"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Fulano"
+                    },
+                    "admin": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "fulano@mail.com"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-07-21T17:32:28Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-07-21T17:32:28Z"
+                    }
+                }
+            },
+            "Error": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
