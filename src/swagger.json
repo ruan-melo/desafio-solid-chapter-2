@@ -214,7 +214,7 @@
                     },
                     "admin": {
                         "type": "boolean",
-                        "example": true
+                        "example": false
                     },
                     "email": {
                         "type": "string",
